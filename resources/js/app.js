@@ -6,8 +6,16 @@ import Aura from "../css/aura";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy";
 
 import Button from "primevue/button";
+import Avatar from "primevue/avatar";
+
+import { Icon } from "@iconify/vue";
+
+// Access the APP_NAME from the environment variables
+const appTitle = import.meta.env.VITE_APP_NAME;
 
 createInertiaApp({
+    title: (title) => `${title} - ${appTitle}`,
+
     resolve: (name) => {
         const pages = import.meta.glob("./pages/**/*.vue", { eager: true });
         return pages[`./pages/${name}.vue`];
@@ -21,7 +29,8 @@ createInertiaApp({
                 pt: Aura,
             })
             .component("Button", Button)
-
+            .component("Avatar", Avatar)
+            .component("Icon", Icon)
             .mount(el);
     },
 });

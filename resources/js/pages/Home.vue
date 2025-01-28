@@ -19,17 +19,17 @@ const selectTab = (tab) => {
     >
         <!-- Sidebar -->
         <aside
-            class="hidden md:flex flex-col border-r border-gray-200 w-64 sticky top-0 h-screen bg-white overflow-y-auto"
+            class="hidden md:flex flex-col border-r border-gray-200 flex-1 sticky top-0 h-screen bg-white overflow-y-auto"
         >
-            <div class="py-4 px-6 text-3xl font-bold text-gray-800">
+            <div class="py-4 px-6 text-3xl font-black text-primary-900">
                 BidWise
             </div>
-            <ul class="mt-6">
+            <ul class="mt-6 mx-2">
                 <li
                     v-for="(tab, index) in customerTabs"
                     :key="index"
                     :class="[
-                        'cursor-pointer py-3 px-4 flex items-center gap-3 font-medium transition duration-200 rounded-md',
+                        'cursor-pointer py-3 px-4 flex my-0.5 items-center gap-3 font-medium transition duration-200 rounded-md',
                         tab.component === selectedTabComponent
                             ? 'font-semibold text-primary-600 bg-gray-100'
                             : 'hover:font-semibold hover:bg-gray-50',
@@ -50,7 +50,7 @@ const selectTab = (tab) => {
         </aside>
 
         <!-- Main Content Section -->
-        <main class="flex-grow flex flex-col bg-white h-screen">
+        <main class="flex-3 flex flex-col bg-white h-screen">
             <header
                 class="sticky top-0 z-10 flex items-center justify-between px-6 py-4 shadow-sm bg-white"
             >

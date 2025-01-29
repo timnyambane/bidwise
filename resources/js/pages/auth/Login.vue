@@ -64,7 +64,7 @@ const handleLogin = async () => {
                     <p class="text-gray-800">
                         Don't have an account?
                         <Link
-                            href="/register"
+                            href="/register/customer"
                             class="text-primary-600 hover:underline"
                             >Sign up</Link
                         >

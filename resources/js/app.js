@@ -9,7 +9,7 @@ import Button from "primevue/button";
 import Avatar from "primevue/avatar";
 
 import { Icon } from "@iconify/vue";
-import { InputText, Password } from "primevue";
+import { InputText, Password, Popover, Tooltip } from "primevue";
 
 // Access the APP_NAME from the environment variables
 const appTitle = import.meta.env.VITE_APP_NAME;
@@ -29,11 +29,13 @@ createInertiaApp({
                 unstyled: true,
                 pt: Aura,
             })
+            .directive("tooltip", Tooltip)
             .component("InputText", InputText)
             .component("Password", Password)
             .component("Button", Button)
             .component("Avatar", Avatar)
             .component("Icon", Icon)
+            .component("Popover", Popover)
             .mount(el);
     },
 });

@@ -55,15 +55,13 @@ const selectTab = (tab) => {
                 class="sticky top-0 z-10 flex items-center justify-between px-6 py-4 shadow-sm bg-white"
             >
                 <span class="text-lg font-semibold">Header</span>
-                <div
-                    class="hidden md:flex items-center cursor-pointer hover:bg-primary-100 p-2 rounded-full"
-                >
+                <div class="flex items-center gap-x-4">
+                    <Button icon="fa-solid fa-plus" rounded size="large" />
                     <Avatar
                         image="https://primefaces.org/cdn/primevue/images/organization/walter.jpg"
                         class="mr-2"
                         shape="circle"
                     />
-                    <h2 class="font-semibold">Johnathan Doetheniel</h2>
                 </div>
             </header>
             <div class="flex-grow overflow-auto px-4 pb-16 md:pb-4">
@@ -98,7 +96,7 @@ const selectTab = (tab) => {
                         "
                         class="text-xl"
                     />
-                    <span>{{ tab.name }}</span>
+                    <span class="">{{ tab.name }}</span>
                 </li>
             </ul>
         </nav>

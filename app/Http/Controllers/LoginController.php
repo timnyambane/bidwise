@@ -7,12 +7,12 @@ use Inertia\Inertia;
 
 class LoginController extends Controller
 {
-    public function index()
+    public function create()
     {
         return Inertia::render('auth/Login');
     }
 
-    public function login()
+    public function store()
     {
         return Inertia::render('Home');
     }

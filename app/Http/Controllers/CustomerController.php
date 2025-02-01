@@ -67,7 +67,7 @@ class CustomerController extends Controller
         ]);
 
         // Redirect back with success message using Inertia
-        return redirect()->route('login.create')->with('success', 'Account created successfully!');
+        return redirect()->route('login')->with('success', 'Account created successfully!');
     }
 
     /**

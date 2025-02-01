@@ -1,14 +1,21 @@
 <script setup>
-import { Head, Link, useForm } from "@inertiajs/vue3";
+import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
+import { computed } from "vue";
 
+// Initialize login form
 const loginDetails = useForm({
     email: "",
     password: "",
 });
 
+// Computed property to check for errors
+const errors = computed(() => usePage().props.errors || {});
+
+// Handle Login Submission
 const handleLogin = async () => {
-    console.log(loginDetails);
-    loginDetails.post(route("login.login"));
+    loginDetails.post(route("login.store"), {
+        onFinish: () => loginDetails.reset("password"), // Reset password field after submission
+    });
 };
 </script>
 
@@ -23,6 +30,18 @@ const handleLogin = async () => {
                 <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
                     Welcome back
                 </h2>
+
+                <!-- Display validation errors -->
+                <div v-if="Object.keys(errors).length" class="text-center mb-4">
+                    <p
+                        v-for="(error, key) in errors"
+                        :key="key"
+                        class="text-red-600 text-sm bg-red-50 py-0.5 my-0.5"
+                    >
+                        {{ error }}
+                    </p>
+                </div>
+
                 <form @submit.prevent="handleLogin">
                     <div class="mb-4">
                         <label
@@ -34,7 +53,6 @@ const handleLogin = async () => {
                             type="email"
                             id="email"
                             v-model="loginDetails.email"
-                            required
                             class="w-full mt-1"
                         />
                     </div>
@@ -45,14 +63,18 @@ const handleLogin = async () => {
                             >Password</label
                         >
                         <Password
-                            required
                             v-model="loginDetails.password"
                             class="w-full mt-1"
                             :feedback="false"
                             toggle-mask
                         />
                     </div>
-                    <Button label="Login" class="w-full mb-2" type="submit" />
+                    <Button
+                        label="Login"
+                        class="w-full mb-2"
+                        type="submit"
+                        :loading="loginDetails.processing"
+                    />
                 </form>
 
                 <Link
@@ -65,7 +87,7 @@ const handleLogin = async () => {
                         Don't have an account?
                         <Link
                             href="/register/customer"
-                            class="text-primary-600 hover:underline"
+                            class="text-primary-600 hover:underline font-semibold"
                             >Sign up</Link
                         >
                     </p>

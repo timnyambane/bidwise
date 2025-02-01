@@ -2,8 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Location;
+use App\Models\WorkCategory;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Illuminate\Support\Facades\Auth;
+
 
 class HandleInertiaRequests extends Middleware
 {
@@ -35,8 +39,30 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $user = Auth::user();
+        $locations = Location::select('id', 'town')->get();
+        $workCategories = WorkCategory::where('active', true)
+            ->with([
+                'services' => function ($query) {
+                    $query->where('active', true);
+                }
+            ])
+            ->get();
+
+
+
         return array_merge(parent::share($request), [
-            //
+            'auth' => [
+                'user' => $user ? [
+                    'id' => $user->id,
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name,
+                    'email' => $user->email,
+                    'role' => $user->role,
+                ] : null,
+            ],
+            'locations' => $locations,
+            'work_categories' => $workCategories
         ]);
     }
 }

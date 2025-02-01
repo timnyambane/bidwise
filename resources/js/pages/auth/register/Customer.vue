@@ -15,13 +15,9 @@ const registerForm = useForm({
 
 const handleRegister = () => {
     isLoading.value = true;
-    registerForm.post(route("register.store"), {
+    registerForm.post(route("register.customer.store"), {
         onFinish: () => (isLoading.value = false),
     });
-};
-
-const handlePhotoUpload = (event) => {
-    registerForm.photo = event.target.files[0];
 };
 </script>
 
@@ -57,6 +53,12 @@ const handlePhotoUpload = (event) => {
                             v-model="registerForm.full_name"
                             class="w-full"
                         />
+                        <p
+                            v-if="registerForm.errors.full_name"
+                            class="text-red-500 text-sm"
+                        >
+                            {{ registerForm.errors.full_name }}
+                        </p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-600"
@@ -67,6 +69,12 @@ const handlePhotoUpload = (event) => {
                             v-model="registerForm.email"
                             class="w-full"
                         />
+                        <p
+                            v-if="registerForm.errors.email"
+                            class="text-red-500 text-sm"
+                        >
+                            {{ registerForm.errors.email }}
+                        </p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-600"
@@ -77,6 +85,12 @@ const handlePhotoUpload = (event) => {
                             v-model="registerForm.phone"
                             class="w-full"
                         />
+                        <p
+                            v-if="registerForm.errors.phone"
+                            class="text-red-500 text-sm"
+                        >
+                            {{ registerForm.errors.phone }}
+                        </p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-600"
@@ -88,6 +102,12 @@ const handlePhotoUpload = (event) => {
                             toggle-mask
                             :feedback="false"
                         />
+                        <p
+                            v-if="registerForm.errors.password"
+                            class="text-red-500 text-sm"
+                        >
+                            {{ registerForm.errors.password }}
+                        </p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-600"
@@ -99,7 +119,12 @@ const handlePhotoUpload = (event) => {
                             :feedback="false"
                         />
                     </div>
-                    <Button type="submit" label="Register" class="w-full" />
+                    <Button
+                        type="submit"
+                        label="Register"
+                        class="w-full"
+                        :loading="registerForm.processing"
+                    />
                 </form>
 
                 <div class="mt-6 text-center">
@@ -107,7 +132,7 @@ const handlePhotoUpload = (event) => {
                         Already have an account?
                         <Link
                             href="/login"
-                            class="text-blue-600 hover:underline"
+                            class="text-primary-600 hover:underline font-semibold"
                             >Login</Link
                         >
                     </p>

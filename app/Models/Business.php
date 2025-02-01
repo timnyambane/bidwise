@@ -35,4 +35,11 @@ class Business extends Model
     {
         return $this->belongsToMany(Service::class);
     }
+
+    public function canQuoteJob(JobPost $job)
+    {
+        return $this->location_id == $job->location_id &&
+            $this->category_id == $job->work_category_id &&
+            $this->services->contains($job->service_id);
+    }
 }

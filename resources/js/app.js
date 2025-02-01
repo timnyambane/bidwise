@@ -5,11 +5,21 @@ import PrimeVue from "primevue/config";
 import Aura from "../css/aura";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy";
 
-import Button from "primevue/button";
-import Avatar from "primevue/avatar";
-
 import { Icon } from "@iconify/vue";
-import { InputText, Password, Popover, Tooltip } from "primevue";
+import {
+    Drawer,
+    InputText,
+    Password,
+    Button,
+    Avatar,
+    Popover,
+    Tooltip,
+    Select,
+    Dialog,
+    Textarea,
+    RadioButton,
+    DatePicker,
+} from "primevue";
 
 // Access the APP_NAME from the environment variables
 const appTitle = import.meta.env.VITE_APP_NAME;
@@ -36,6 +46,12 @@ createInertiaApp({
             .component("Avatar", Avatar)
             .component("Icon", Icon)
             .component("Popover", Popover)
+            .component("Drawer", Drawer)
+            .component("Select", Select)
+            .component("Dialog", Dialog)
+            .component("Textarea", Textarea)
+            .component("RadioButton", RadioButton)
+            .component("DatePicker", DatePicker)
             .mount(el);
     },
 });

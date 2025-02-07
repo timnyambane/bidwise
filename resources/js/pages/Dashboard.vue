@@ -1,6 +1,6 @@
 <script setup>
-import { Head, usePage } from "@inertiajs/vue3";
-import { ref, computed } from "vue";
+import { Head, usePage, router } from "@inertiajs/vue3";
+import { ref, computed, defineEmits } from "vue";
 import { customerTabs } from "@/data.js";
 import PostJobDrawer from "@components/base/PostJobDrawer.vue";
 
@@ -14,8 +14,23 @@ const selectTab = (tab) => {
 };
 
 const user = computed(() => usePage().props.auth?.user);
-const logout = async () => {
-    await axios.post(route("logout"));
+const handleLogout = () => {
+    router.post(
+        route("logout"),
+        {},
+        {
+            onSuccess: () => {
+                router.visit(route("home"));
+            },
+            onError: (error) => {
+                console.error(error);
+            },
+        }
+    );
+};
+
+const handleJobPosted = () => {
+    postJobDrawer.value = false;
 };
 </script>
 
@@ -59,12 +74,18 @@ const logout = async () => {
         <!-- Main Content Section -->
         <main class="flex-1 bg-white min-h-screen flex flex-col">
             <header
-                class="sticky top-0 z-10 flex items-center justify-between px-6 py-2 md:py-2 shadow-sm bg-white"
+                class="sticky top-0 z-10 flex items-center justify-between px-4 md:px-6 py-2 shadow-sm bg-white"
             >
                 <span class="text-lg font-semibold">
                     Welcome, {{ user.first_name }}
                 </span>
                 <div class="flex items-center gap-x-4">
+                    <Button
+                        label="Logout"
+                        text
+                        size="small"
+                        @click="handleLogout"
+                    />
                     <Button
                         icon="fa-solid fa-plus"
                         @click="postJobDrawer = true"
@@ -77,7 +98,7 @@ const logout = async () => {
                         :position="'top'"
                         class="w-[95%] md:w-[50%] mt-20"
                     >
-                        <PostJobDrawer />
+                        <PostJobDrawer @job-posted="handleJobPosted" />
                     </Dialog>
                     <Avatar
                         :image="'https://primefaces.org/cdn/primevue/images/organization/walter.jpg'"

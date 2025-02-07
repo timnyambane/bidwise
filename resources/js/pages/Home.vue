@@ -1,9 +1,11 @@
 <script setup>
-import { Link } from "@inertiajs/vue3";
+import { Link, Head } from "@inertiajs/vue3";
 </script>
 
 <template>
-    <div>
+    <div class="flex flex-col">
+        <Head title="Home" />
         <Link href="/dashboard">Dashboard</Link>
+        <Link href="/register/business">Business Reg</Link>
     </div>
 </template>

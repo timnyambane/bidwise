@@ -25,7 +25,7 @@ const handleLogin = async () => {
         <!-- Main Content -->
         <main class="flex-grow flex items-center justify-center bg-gray-100">
             <div
-                class="w-full flex flex-col max-w-md bg-white shadow-lg rounded-lg p-8"
+                class="w-full flex flex-col max-w-md bg-white shadow-sm rounded p-8 mx-2"
             >
                 <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
                     Welcome back

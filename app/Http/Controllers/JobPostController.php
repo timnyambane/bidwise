@@ -32,7 +32,6 @@ class JobPostController extends Controller
      */
     public function store(Request $request)
     {
-        Log::info('Job post store function triggered', ['request_data' => $request->all()]);
 
         try {
             $validated = $request->validate([
@@ -45,7 +44,6 @@ class JobPostController extends Controller
                 'specificDate' => 'nullable|date',
             ]);
 
-            Log::info('Validation successful', ['validated_data' => $validated]);
 
             $jobPost = JobPost::create([
                 'user_id' => Auth::id(),
@@ -57,8 +55,6 @@ class JobPostController extends Controller
                 'urgency' => $validated['urgency'],
                 'specificDate' => $validated['specificDate'],
             ]);
-
-            Log::info('Job post created successfully', ['job_post' => $jobPost]);
 
             return redirect()->back()->with('success', 'Job post created successfully');
         } catch (Exception $e) {

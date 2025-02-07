@@ -19,6 +19,8 @@ import {
     Textarea,
     RadioButton,
     DatePicker,
+    MultiSelect,
+    Menu,
 } from "primevue";
 
 // Access the APP_NAME from the environment variables
@@ -52,6 +54,8 @@ createInertiaApp({
             .component("Textarea", Textarea)
             .component("RadioButton", RadioButton)
             .component("DatePicker", DatePicker)
+            .component("MultiSelect", MultiSelect)
+            .component("Menu", Menu)
             .mount(el);
     },
 });

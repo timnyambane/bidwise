@@ -8,8 +8,7 @@ class Business extends Model
 {
     protected $fillable = [
         'user_id',
-        'location_id',
-        'category_id',
+        'location',
         'phone',
         'name',
         'website',
@@ -26,7 +25,7 @@ class Business extends Model
         return $this->belongsTo(Location::class);
     }
 
-    public function category()
+    public function workCategory()
     {
         return $this->belongsTo(WorkCategory::class);
     }
@@ -34,12 +33,5 @@ class Business extends Model
     public function services()
     {
         return $this->belongsToMany(Service::class);
-    }
-
-    public function canQuoteJob(JobPost $job)
-    {
-        return $this->location_id == $job->location_id &&
-            $this->category_id == $job->work_category_id &&
-            $this->services->contains($job->service_id);
     }
 }

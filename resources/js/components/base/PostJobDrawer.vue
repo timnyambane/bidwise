@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, defineEmits } from "vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 import DatePicker from "primevue/datepicker";
 
@@ -25,11 +25,12 @@ let prevYear = prevMonth === 11 ? year - 1 : year;
 minDate.value.setMonth(prevMonth);
 minDate.value.setFullYear(prevYear);
 
-// Services filter based on category selection
 const filteredServices = ref([]);
-const step = ref(1); // Tracks the current step (1, 2, or 3)
+const step = ref(1);
 
-// Update services when the selected category changes
+// Emit event to parent component
+const emit = defineEmits();
+
 const updateServices = () => {
     const selected = work_categories.find(
         (category) => category.id === jobPost.selectedCategory
@@ -84,7 +85,6 @@ const selectedServiceName = computed(() => {
     );
 });
 
-// Computed property to get the selected location name
 const selectedLocationName = computed(() => {
     return (
         locations.find((loc) => loc.id === jobPost.selectedLocation)?.town || ""
@@ -93,7 +93,11 @@ const selectedLocationName = computed(() => {
 
 // Post the job when ready
 const postJob = async () => {
-    await jobPost.post(route("job-posts.store"));
+    await jobPost.post(route("job-posts.store"), {
+        onSuccess: () => {
+            emit("jobPosted");
+        },
+    });
 };
 </script>
 

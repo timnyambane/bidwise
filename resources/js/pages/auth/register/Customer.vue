@@ -9,8 +9,7 @@ const registerForm = useForm({
     email: "",
     phone: "",
     password: "",
-    password_confirmation: "",
-    photo: null,
+    confirmPassword: "",
 });
 
 const handleRegister = () => {
@@ -24,7 +23,7 @@ const handleRegister = () => {
 <template>
     <Head title="Register" />
     <div class="flex min-h-screen">
-        <!-- Left Section - Image -->
+        <!-- Left Section: Image -->
         <div
             class="hidden md:flex w-1/2 bg-gray-200 items-center justify-center"
         >
@@ -35,7 +34,7 @@ const handleRegister = () => {
             />
         </div>
 
-        <!-- Right Section - Registration Form -->
+        <!-- Right Section: Registration Form -->
         <div
             class="w-full md:w-1/2 flex items-center justify-center bg-white px-8 py-12"
         >
@@ -43,60 +42,87 @@ const handleRegister = () => {
                 <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
                     Create an Account
                 </h2>
+
+                <!-- Registration Form -->
                 <form @submit.prevent="handleRegister" class="space-y-4">
+                    <!-- Full Name -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-600"
+                        <label
+                            for="full_name"
+                            class="block text-sm font-medium text-gray-600"
                             >Full Name</label
                         >
                         <InputText
-                            type="text"
+                            id="full_name"
                             v-model="registerForm.full_name"
                             class="w-full"
+                            type="text"
+                            aria-describedby="full_name_error"
                         />
                         <p
                             v-if="registerForm.errors.full_name"
+                            id="full_name_error"
                             class="text-red-500 text-sm"
                         >
                             {{ registerForm.errors.full_name }}
                         </p>
                     </div>
+
+                    <!-- Email -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-600"
+                        <label
+                            for="email"
+                            class="block text-sm font-medium text-gray-600"
                             >Email</label
                         >
                         <InputText
-                            type="email"
+                            id="email"
                             v-model="registerForm.email"
                             class="w-full"
+                            type="email"
+                            aria-describedby="email_error"
                         />
                         <p
                             v-if="registerForm.errors.email"
+                            id="email_error"
                             class="text-red-500 text-sm"
                         >
                             {{ registerForm.errors.email }}
                         </p>
                     </div>
+
+                    <!-- Phone -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-600"
+                        <label
+                            for="phone"
+                            class="block text-sm font-medium text-gray-600"
                             >Phone</label
                         >
                         <InputText
-                            type="tel"
+                            id="phone"
                             v-model="registerForm.phone"
                             class="w-full"
+                            type="tel"
+                            aria-describedby="phone_error"
                         />
                         <p
                             v-if="registerForm.errors.phone"
+                            id="phone_error"
                             class="text-red-500 text-sm"
                         >
                             {{ registerForm.errors.phone }}
                         </p>
                     </div>
+
+                    <!-- Password -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-600"
+                        <label
+                            for="password"
+                            class="block text-sm font-medium text-gray-600"
                             >Password</label
                         >
                         <Password
+                            id="password"
                             v-model="registerForm.password"
                             class="w-full"
                             toggle-mask
@@ -109,24 +135,38 @@ const handleRegister = () => {
                             {{ registerForm.errors.password }}
                         </p>
                     </div>
+
+                    <!-- Confirm Password -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-600"
+                        <label
+                            for="confirmPassword"
+                            class="block text-sm font-medium text-gray-600"
                             >Confirm Password</label
                         >
                         <Password
-                            v-model="registerForm.password_confirmation"
+                            id="confirmPassword"
+                            v-model="registerForm.confirmPassword"
                             class="w-full"
                             :feedback="false"
                         />
+                        <p
+                            v-if="registerForm.errors.confirmPassword"
+                            class="text-red-500 text-sm"
+                        >
+                            {{ registerForm.errors.confirmPassword }}
+                        </p>
                     </div>
+
+                    <!-- Submit Button -->
                     <Button
                         type="submit"
                         label="Register"
                         class="w-full"
-                        :loading="registerForm.processing"
+                        :loading="registerForm.processing || isLoading"
                     />
                 </form>
 
+                <!-- Login Redirect -->
                 <div class="mt-6 text-center">
                     <p class="text-gray-800">
                         Already have an account?

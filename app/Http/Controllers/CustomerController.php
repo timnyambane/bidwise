@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RegisterCustomerRequest;
 use App\Models\Customer;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class CustomerController extends Controller
@@ -36,38 +39,43 @@ class CustomerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(RegisterCustomerRequest $request)
     {
-        // Validate incoming request
-        $validated = $request->validate([
-            'full_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6|confirmed',
-            'phone' => 'required|unique:customers,phone',
-        ]);
+        $data = $request->validated();
 
-        if (str_word_count($validated['full_name']) < 2) {
-            return back()->withErrors(['full_name' => 'Please provide both first and last names.'])->withInput();
+        $phoneNumber = $data['phone'];
+        if (substr($phoneNumber, 0, 2) === '07') {
+            $data['phone'] = config('constants.country_code') . substr($phoneNumber, 1);
         }
 
-        $nameParts = explode(' ', $validated['full_name'], 2);
-        $firstName = $nameParts[0] ?? '';
-        $lastName = $nameParts[1] ?? '';
+        if (isset($data['full_name'])) {
+            list($firstName, $lastName) = explode(' ', $data['full_name']);
+        } else {
+            $firstName = $request->get('firstName');
+            $lastName = $request->get('lastName');
+            $data['full_name'] = $firstName . ' ' . $lastName;
+        }
 
-        $user = User::create([
-            'first_name' => $firstName,
-            'last_name' => $lastName,
-            'email' => $validated['email'],
-            'password' => $validated['password'],
-        ]);
+        try {
+            $user = User::create([
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'email' => $data['email'],
+                'password' => $data['password'],
+                'role' => config('constants.accountType.customer')
+            ]);
 
-        $customer = Customer::create([
-            'user_id' => $user->id,
-            'phone' => $validated['phone'],
-        ]);
+            Customer::create([
+                'user_id' => $user->id,
+                'phone' => $data['phone'],
+            ]);
 
-        // Redirect back with success message using Inertia
-        return redirect()->route('login')->with('success', 'Account created successfully!');
+            return redirect()->route('login')->with('success', 'Account created successfully!');
+
+
+        } catch (Exception $e) {
+            Log::error('Registration failed: ' . $e->getMessage());
+        }
     }
 
     /**

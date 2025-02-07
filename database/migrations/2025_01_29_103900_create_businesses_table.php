@@ -12,14 +12,12 @@ return new class extends Migration {
     {
         Schema::create('businesses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('set null');
-            $table->foreignId('location_id')->constrained()->onDelete('set null');
-            $table->foreignId('work_category_id')->constrained()->onDelete('set null');
-            $table->foreignId('category_id')->constrained()->onDelete('set null');
-            $table->string('phone');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('name');
-            $table->string('website')->nullable();
+            $table->string('location');
+            $table->string('phone');
             $table->string('photo')->nullable();
+            $table->string('website')->nullable();
             $table->timestamps();
         });
     }

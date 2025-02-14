@@ -39,3 +39,38 @@ export const customerTabs = [
         },
     },
 ];
+
+export const businessTabs = [
+    {
+        name: "Leads",
+        component: markRaw(NewJobs),
+        icon: {
+            default: "streamline:new-sticky-note",
+            active: "streamline:new-sticky-note-solid",
+        },
+    },
+    {
+        name: "Quoted",
+        component: markRaw(Quoted),
+        icon: {
+            default: "bi:chat-square-quote",
+            active: "bi:chat-square-quote-fill",
+        },
+    },
+    {
+        name: "InProgress",
+        component: markRaw(InProgress),
+        icon: {
+            default: "tabler:clock",
+            active: "tabler:clock-filled",
+        },
+    },
+    {
+        name: "Completed",
+        component: markRaw(Completed),
+        icon: {
+            default: "ph:seal-check-bold",
+            active: "ph:seal-check-fill",
+        },
+    },
+];

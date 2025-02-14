@@ -56,7 +56,7 @@ async function fetchJobs() {
 }
 
 const getLocationName = (id) =>
-    locations.find((loc) => loc.id === id)?.town || "Unknown Location";
+    locations.find((loc) => loc.id === id)?.location || "Unknown Location";
 const getServiceName = (workCategoryId, serviceId) => {
     return (
         work_categories

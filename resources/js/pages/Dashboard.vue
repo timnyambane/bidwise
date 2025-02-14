@@ -1,7 +1,7 @@
 <script setup>
 import { Head, usePage, router } from "@inertiajs/vue3";
-import { ref, computed, defineEmits } from "vue";
-import { customerTabs } from "@/data.js";
+import { ref, computed } from "vue";
+import { customerTabs, businessTabs } from "@/data.js";
 import PostJobDrawer from "@components/base/PostJobDrawer.vue";
 
 const selectedTabComponent = ref(customerTabs[0].component);
@@ -29,6 +29,10 @@ const handleLogout = () => {
     );
 };
 
+const tabs = computed(() => {
+    return user.value?.role === "business" ? businessTabs : customerTabs;
+});
+
 const handleJobPosted = () => {
     postJobDrawer.value = false;
 };
@@ -48,7 +52,7 @@ const handleJobPosted = () => {
             </div>
             <ul class="mt-6 mx-2">
                 <li
-                    v-for="(tab, index) in customerTabs"
+                    v-for="(tab, index) in tabs"
                     :key="index"
                     :class="[
                         'cursor-pointer py-3 px-4 flex my-0.5 items-center gap-3 font-medium transition duration-200 rounded-md',
@@ -122,7 +126,7 @@ const handleJobPosted = () => {
         >
             <ul class="flex justify-around items-center py-3">
                 <li
-                    v-for="(tab, index) in customerTabs"
+                    v-for="(tab, index) in tabs"
                     :key="index"
                     :class="[
                         'cursor-pointer flex flex-col items-center text-sm font-medium transition duration-200',

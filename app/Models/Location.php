@@ -6,7 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Location extends Model
 {
-    protected $fillable = ['town', 'latitude', 'longitude', 'postcode'];
+    protected $fillable = [
+        'location',
+        'town',
+        'country',
+        'region',
+        'latitude',
+        'longitude',
+        'postcode'
+    ];
 
     public function jobs()
     {
@@ -15,6 +23,6 @@ class Location extends Model
 
     public function businesses()
     {
-        return $this->hasMany(Business::class);
+        return $this->belongsToMany(Business::class);
     }
 }

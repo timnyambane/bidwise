@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\RegisterBusinessRequest;
 use App\Http\Requests\RegisterCustomerRequest;
 use App\Models\Business;
+use App\Models\Location;
+use App\Models\Service;
 use App\Models\User;
+use App\Models\WorkCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -48,14 +51,12 @@ class BusinessController extends Controller
     {
         $data = $request->all();
 
-        // Extract first and last name from full_name
-        if (isset($data['full_name'])) {
-            $nameParts = explode(' ', $data['full_name'], 2);
-            $firstName = $nameParts[0] ?? '';
-            $lastName = $nameParts[1] ?? '';
-        } else {
-            $firstName = $request->get('firstName', '');
-            $lastName = $request->get('lastName', '');
+        $name = splitFullName($data['full_name'] ?? null);
+        $firstName = $name['first_name'];
+        $lastName = $name['last_name'];
+
+        // Ensure full_name is set properly
+        if (!isset($data['full_name'])) {
             $data['full_name'] = trim("$firstName $lastName");
         }
 
@@ -63,11 +64,6 @@ class BusinessController extends Controller
             // Validate necessary fields
             if (!isset($data['location']['id']) || !isset($data['work_category']['id'])) {
                 return redirect()->back()->withErrors(['error' => 'Invalid location or work category']);
-            }
-
-            $phoneNumber = $data['phone'];
-            if (substr($phoneNumber, 0, 2) === '07') {
-                $data['phone'] = config('constants.country_code') . substr($phoneNumber, 1);
             }
 
             // Create User
@@ -79,16 +75,31 @@ class BusinessController extends Controller
                 'role' => config('constants.accountType.business')
             ]);
 
-            $phone =
+            // Fetch the location and work category by their IDs
+            $location = Location::find($data['location']['id']);
+            $workCategory = WorkCategory::find($data['work_category']['id']);
 
-                // Create a single Business (not looping!)
-                $business = Business::create([
-                    'user_id' => $user->id,
-                    'name' => $data['business_name'],
-                    'location' => $data['location']['town'],
-                    'work_category' => $data['work_category']['name'],
-                    'phone' => $data['phone'],
-                ]);
+            // Check if the location or work category does not exist
+            if (!$location || !$workCategory) {
+                return redirect()->back()->withErrors(['error' => 'Location or Work Category not found']);
+            }
+
+            // Create the Business
+            $business = Business::create([
+                'user_id' => $user->id,
+                'name' => $data['business_name'],
+                'location' => $location->location,
+                'work_category' => $workCategory->name,
+                'phone' => formatPhoneNumber($data['phone'])
+            ]);
+
+            // Link the Business to its services
+            $serviceIds = array_column($data['services'], 'id');
+            $services = Service::whereIn('id', $serviceIds)->get();
+            $business->services()->sync($services);
+
+            // Link the Business to its Location (Single Location)
+            $business->locations()->attach($location);  // Attach the single location
 
             session()->flash('success', 'Business account registered successfully');
             return redirect()->route('login');
@@ -104,6 +115,8 @@ class BusinessController extends Controller
             return redirect()->back()->withInput();
         }
     }
+
+
 
 
 

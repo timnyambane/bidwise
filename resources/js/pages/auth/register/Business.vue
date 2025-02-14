@@ -13,7 +13,7 @@ const registrationForm = useForm({
     confirmPassword: "",
     business_name: "",
     phone: "",
-    location: "",
+    location: [],
     work_category: "",
     services: [],
 });
@@ -216,7 +216,7 @@ watch(
                             <Select
                                 v-model="registrationForm.location"
                                 :options="locations"
-                                optionLabel="town"
+                                optionLabel="location"
                                 placeholder="Select a Location"
                                 class="w-full"
                             />

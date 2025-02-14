@@ -87,7 +87,7 @@ const selectedServiceName = computed(() => {
 
 const selectedLocationName = computed(() => {
     return (
-        locations.find((loc) => loc.id === jobPost.selectedLocation)?.town || ""
+        locations.find((loc) => loc.id === jobPost.selectedLocation)?.location || ""
     );
 });
 
@@ -124,7 +124,7 @@ const postJob = async () => {
             <Select
                 v-model="jobPost.selectedLocation"
                 :options="locations"
-                optionLabel="town"
+                optionLabel="location"
                 optionValue="id"
                 placeholder="Select your location"
                 class="w-full"

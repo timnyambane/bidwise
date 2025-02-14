@@ -43,17 +43,13 @@ class CustomerController extends Controller
     {
         $data = $request->validated();
 
-        $phoneNumber = $data['phone'];
-        if (substr($phoneNumber, 0, 2) === '07') {
-            $data['phone'] = config('constants.country_code') . substr($phoneNumber, 1);
-        }
+        $name = splitFullName($data['full_name'] ?? null);
+        $firstName = $name['first_name'];
+        $lastName = $name['last_name'];
 
-        if (isset($data['full_name'])) {
-            list($firstName, $lastName) = explode(' ', $data['full_name']);
-        } else {
-            $firstName = $request->get('firstName');
-            $lastName = $request->get('lastName');
-            $data['full_name'] = $firstName . ' ' . $lastName;
+        // Ensure full_name is set properly
+        if (!isset($data['full_name'])) {
+            $data['full_name'] = trim("$firstName $lastName");
         }
 
         try {
@@ -67,16 +63,22 @@ class CustomerController extends Controller
 
             Customer::create([
                 'user_id' => $user->id,
-                'phone' => $data['phone'],
+                'phone' => formatPhoneNumber($data['phone'])
             ]);
 
-            return redirect()->route('login')->with('success', 'Account created successfully!');
-
-
+            session()->flash('success', 'Customer account registered successfully');
+            return redirect()->route('login');
         } catch (Exception $e) {
-            Log::error('Registration failed: ' . $e->getMessage());
+            Log::error('Registration failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'data' => $data // Log request data for debugging
+            ]);
+
+            return redirect()->back()->withInput()->withErrors(['error' => 'An error occurred during registration.']);
         }
     }
+
 
     /**
      * Display the specified resource.

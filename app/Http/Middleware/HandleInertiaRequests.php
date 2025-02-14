@@ -40,14 +40,16 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $user = Auth::user();
-        $locations = Location::select('id', 'town')->get();
+        $locations = Location::select('id', 'location')->orderBy('location', 'asc')->get();
         $workCategories = WorkCategory::where('active', true)
             ->with([
                 'services' => function ($query) {
-                    $query->where('active', true);
+                    $query->where('active', true)->select('id', 'name', 'work_category_id');
                 }
             ])
+            ->select('id', 'name')
             ->get();
+
 
 
 
@@ -62,7 +64,12 @@ class HandleInertiaRequests extends Middleware
                 ] : null,
             ],
             'locations' => $locations,
-            'work_categories' => $workCategories
+            'work_categories' => $workCategories,
+            'flash' => [
+                'success' => session('success'),
+                'error' => session('error'),
+                'warning' => session('warning'),
+            ],
         ]);
     }
 }

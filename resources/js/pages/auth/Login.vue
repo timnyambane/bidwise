@@ -10,6 +10,7 @@ const loginDetails = useForm({
 
 // Computed property to check for errors
 const errors = computed(() => usePage().props.errors || {});
+const flash = computed(()=>usePage().props.flash || {})
 
 // Handle Login Submission
 const handleLogin = async () => {
@@ -41,6 +42,16 @@ const handleLogin = async () => {
                         {{ error }}
                     </p>
                 </div>
+                
+                <div v-if="flash" class="text-center mb-4">
+                    <p
+                        class="text-green-600 text-sm bg-gray-50 py-0.5 my-0.5"
+                    >
+                        {{ flash.success }}
+                    </p>
+                </div>
+
+
 
                 <form @submit.prevent="handleLogin">
                     <div class="mb-4">

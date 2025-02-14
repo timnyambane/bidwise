@@ -20,9 +20,9 @@ class Business extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function location()
+    public function locations()
     {
-        return $this->belongsTo(Location::class);
+        return $this->belongsToMany(Location::class);
     }
 
     public function workCategory()

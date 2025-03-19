@@ -50,7 +50,6 @@ const navLinks = [
                 <Link
                     v-for="link in navLinks"
                     :key="link.name"
-                    :href="route(link.route)"
                     class="text-gray-700 text-lg hover:text-blue-600 transition"
                 >
                     {{ link.name }}

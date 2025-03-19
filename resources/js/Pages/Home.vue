@@ -6,12 +6,14 @@ defineOptions({ layout: Layout });
 </script>
 <template>
     <Head title="Welcome" />
-    <div class="flex pt-10 container mx-auto items-center">
-        <div class="flex-1 flex flex-col gap-4">
-            <h1 class="font-bold text-4xl">
+    <div
+        class="flex flex-col lg:flex-row pt-10 container mx-auto items-center p-4"
+    >
+        <div class="flex-1 flex flex-col gap-4 items-center lg:items-start">
+            <h1 class="font-bold text-4xl text-center lg:text-start">
                 Ditch the DIY, Discover the Pros.
             </h1>
-            <h2 class="font-medium text-base">
+            <h2 class="font-medium text-base text-center lg:text-start">
                 Seamlessly connect with top local professionals to get your
                 tasks done right—effortlessly, efficiently, and right in your
                 neighborhood

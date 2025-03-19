@@ -1,8 +1,9 @@
 <script setup>
 import { ref, computed, markRaw, shallowRef, onMounted, watch } from "vue";
-import { Head, Link, usePage } from "@inertiajs/vue3";
+import { Head, Link, usePage, router } from "@inertiajs/vue3";
 import Footer from "@/Components/Base/Footer.vue";
 import { customerTabs, businessTabs } from "@/data.js";
+import PostJobModal from "../Components/Base/PostJobModal.vue";
 
 const user = computed(() => usePage().props.auth?.user);
 
@@ -11,7 +12,9 @@ const tabs = computed(() =>
 );
 
 const activeTab = ref("");
+const jobPostModal = ref(false);
 const selectedTabComponent = shallowRef(null);
+const op = ref();
 
 const initializeTab = () => {
     const storedTabName = localStorage.getItem("activeTab");
@@ -22,6 +25,14 @@ const initializeTab = () => {
         activeTab.value = defaultTab.name;
         selectedTabComponent.value = markRaw(defaultTab.component);
     }
+};
+
+const logout = () => {
+    router.post(route("logout"));
+};
+
+const togglePopover = (event) => {
+    op.value.toggle(event);
 };
 
 const selectTab = (tab) => {
@@ -67,7 +78,7 @@ const applyFilters = () => {
         <!-- Header -->
         <header class="fixed top-0 w-full bg-white shadow-md z-50">
             <nav
-                class="container mx-auto flex items-center justify-between py-2 px-4"
+                class="container mx-auto flex items-center justify-between py-2 px-4 lg:px-10"
             >
                 <Link :href="route('home')">
                     <img src="@/assets/bidwise-full.svg" alt="" class="h-10" />
@@ -88,6 +99,32 @@ const applyFilters = () => {
                         title="Inbox"
                     />
                 </div>
+                <img
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIn-gE6j6sjvg0ekFgFBIzVP5VdN3aBu9dLg&s"
+                    alt="User profile"
+                    class="size-10 rounded-full object-center object-cover cursor-pointer"
+                    @click="togglePopover"
+                />
+                <Popover ref="op">
+                    <div
+                        class="p-1 text-center border-b border-gray-600 mb-1 gap-1 flex flex-col items-start text-gray-600"
+                    >
+                        <p class="flex items-center gap-2">
+                            <i class="fa-solid fa-envelope" /> {{ user.email }}
+                        </p>
+                        <p class="flex items-center gap-2">
+                            <i class="fa-solid fa-user" /> {{ user.role }}
+                        </p>
+                    </div>
+                    <Button
+                        label="Logout"
+                        size="small"
+                        variant="link"
+                        icon="fa-solid fa-right-from-bracket"
+                        @click="logout"
+                        severity="danger"
+                    />
+                </Popover>
             </nav>
         </header>
 
@@ -135,6 +172,7 @@ const applyFilters = () => {
                         aria-label="Post Job"
                         title="Post a new job"
                         class="mt-4"
+                        @click="jobPostModal = true"
                     />
                 </nav>
             </aside>
@@ -194,6 +232,7 @@ const applyFilters = () => {
                     class="w-full mt-2"
                     @click="applyFilters"
                     size="small"
+                    icon="fa-solid fa-filter"
                 />
             </aside>
         </main>
@@ -212,7 +251,7 @@ const applyFilters = () => {
                 <!-- Render the first half of the tabs -->
                 <button
                     v-if="index === Math.ceil(tabs.length / 3)"
-                    @click="postJob"
+                    @click="jobPostModal = true"
                     aria-label="Post Job"
                     title="Post a new job"
                     class="bg-primary-600 text-white rounded-full size-12 flex items-center justify-center shadow-lg transform -translate-y-3"
@@ -290,4 +329,6 @@ const applyFilters = () => {
         <!-- Footer -->
         <Footer class="hidden md:block bg-gray-100" />
     </div>
+
+    <PostJobModal v-model:modelValue="jobPostModal" />
 </template>

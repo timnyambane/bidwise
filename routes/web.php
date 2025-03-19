@@ -1,0 +1,24 @@
+<?php
+
+use App\Http\Controllers\BusinessController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LoginController;
+use Illuminate\Support\Facades\Route;
+
+Route::middleware('guest')->group(function () {
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/login', [LoginController::class, 'create'])->name('login');
+    Route::post('/login', [LoginController::class, 'store'])->name('login.store');
+    Route::get('/register/customer', [CustomerController::class, 'create'])->name('register.customer.create');
+    Route::post('/register/customer', [CustomerController::class, 'store'])->name('register.customer.store');
+    Route::get('/register/business', [BusinessController::class, 'create'])->name('register.business.create');
+    Route::post('/register/business', [BusinessController::class, 'store'])->name('register.business.store');
+    Route::post('/validate-user', [BusinessController::class, 'validateUser'])->name('register.business.validate-user');
+    Route::post('/validate-business', [BusinessController::class, 'validateBusiness'])->name('register.business.validate-business');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+});

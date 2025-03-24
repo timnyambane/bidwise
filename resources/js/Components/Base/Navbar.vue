@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue";
-import { Link } from "@inertiajs/vue3";
+import { Link, usePage } from "@inertiajs/vue3";
 
 const isDrawerOpen = ref(false);
 
@@ -22,17 +22,28 @@ const navLinks = [
             <!-- Desktop Menu -->
             <div class="hidden lg:flex items-center gap-6">
                 <Button
+                    v-if="usePage().props.auth.user"
                     label="Contact Us"
                     size="small"
                     icon="fa-solid fa-phone"
                     variant="outlined"
+                    as="a"
+                    href="tel:0706783789"
                 />
                 <Button
+                    v-if="!usePage().props.auth.user"
                     label="Login"
                     size="small"
                     icon="fa-solid fa-right-to-bracket"
                     as="a"
                     :href="route('login')"
+                />
+                <Button
+                    v-if="usePage().props.auth.user"
+                    label="Dashboard"
+                    size="small"
+                    as="a"
+                    :href="route('dashboard')"
                 />
             </div>
 

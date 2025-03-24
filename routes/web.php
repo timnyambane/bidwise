@@ -8,8 +8,8 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::middleware('guest')->group(function () {
-    Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/login', [LoginController::class, 'create'])->name('login');
     Route::post('/login', [LoginController::class, 'store'])->name('login.store');
     Route::get('/register/customer', [CustomerController::class, 'create'])->name('register.customer.create');

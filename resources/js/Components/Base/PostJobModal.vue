@@ -1,25 +1,23 @@
 <script setup>
-import { useForm } from "@inertiajs/vue3";
-import { defineProps, defineEmits, ref, computed, capitalize } from "vue";
+import { useForm, usePage } from "@inertiajs/vue3";
+import {
+    defineProps,
+    defineEmits,
+    ref,
+    computed,
+    watch,
+    capitalize,
+} from "vue";
+const { locations, categories } = usePage().props;
 
 defineProps({
     modelValue: Boolean,
 });
 
 const emit = defineEmits(["update:modelValue"]);
-
 const emitUpdate = (value) => {
     emit("update:modelValue", value);
 };
-
-const formattedDate = computed(() => {
-    if (!jobPost.date) return "Not specified";
-    return new Intl.DateTimeFormat("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-    }).format(new Date(jobPost.date));
-});
 
 const jobPost = useForm({
     title: null,
@@ -33,10 +31,29 @@ const jobPost = useForm({
     date: null,
 });
 
+const services = computed(() => {
+    return (
+        categories.find((cat) => cat.id == jobPost.category?.id)?.services ?? []
+    );
+});
+
+watch(
+    () => jobPost.category,
+    () => (jobPost.service = null)
+);
+
+const formattedDate = computed(() => {
+    if (!jobPost.date) return "Not specified";
+    return new Intl.DateTimeFormat("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    }).format(new Date(jobPost.date));
+});
+
 const today = new Date();
 const minDate = ref(new Date());
 const maxDate = ref(new Date());
-
 maxDate.value.setDate(today.getDate() + 30);
 
 const jobPostStep = ref(1);
@@ -49,8 +66,14 @@ const canProceed = computed(() => {
             jobPost.location &&
             jobPost.property
         );
-    } else if (jobPostStep.value === 2) {
-        return jobPost.title && jobPost.desc;
+    }
+    if (jobPostStep.value === 2) {
+        return (
+            jobPost.title &&
+            jobPost.desc &&
+            jobPost.urgency &&
+            (jobPost.urgency !== "specificDate" || jobPost.date)
+        );
     }
     return true;
 });
@@ -74,8 +97,9 @@ const submitJobPost = () => {
                     <Select
                         v-model="jobPost.category"
                         placeholder="Select the category"
+                        :options="categories"
+                        optionLabel="name"
                         fluid
-                        editable
                     >
                         <template #dropdownicon>
                             <Icon icon="lucide:layers" />
@@ -84,8 +108,9 @@ const submitJobPost = () => {
                     <Select
                         v-model="jobPost.service"
                         placeholder="Select the service"
+                        :options="services"
+                        optionLabel="name"
                         fluid
-                        editable
                     >
                         <template #dropdownicon>
                             <Icon icon="carbon:category" />
@@ -94,15 +119,19 @@ const submitJobPost = () => {
                     <Select
                         v-model="jobPost.location"
                         placeholder="Select your location"
+                        :options="locations"
+                        optionLabel="location"
                         fluid
-                        editable
                     >
                         <template #dropdownicon>
                             <Icon icon="lucide:map-pin" />
                         </template>
                     </Select>
 
-                    <div class="flex flex-col flex-wrap mt-2">
+                    <Fieldset
+                        legend="Property type"
+                        class="flex flex-col flex-wrap mt-2"
+                    >
                         <div class="flex items-center gap-2 mb-2">
                             <RadioButton
                                 v-model="jobPost.property"
@@ -121,7 +150,7 @@ const submitJobPost = () => {
                             />
                             <label for="residential">Residential</label>
                         </div>
-                    </div>
+                    </Fieldset>
                 </div>
 
                 <!-- Step 2 -->
@@ -206,50 +235,76 @@ const submitJobPost = () => {
                 </div>
 
                 <!-- Step 3: Summary -->
-                <div v-if="jobPostStep === 3" class="flex flex-col gap-4">
-                    <div class="flex justify-center gap-1 items-center">
-                        <h3 class="text-lg font-semibold">
+                <div
+                    v-if="jobPostStep === 3"
+                    class="flex flex-col gap-2.5 rounded-lg"
+                >
+                    <!-- Title Section -->
+                    <div
+                        class="flex justify-center gap-2 items-center border-b pb-2"
+                    >
+                        <h3 class="text-xl font-bold text-gray-800">
                             Review Your Job Post
                         </h3>
                         <Icon
                             v-if="jobPost.type"
                             icon="material-symbols-light:verified-rounded"
-                            class="text-yellow-500 text-lg"
+                            class="text-yellow-500 text-xl"
                             aria-label="Verified"
                         />
                     </div>
-                    <p class="flex flex-col">
-                        <strong>Title:</strong>
-                        {{ jobPost.title }}
-                    </p>
 
-                    <p class="flex flex-col">
-                        <strong>Description:</strong> {{ jobPost.desc }}
-                    </p>
-                    <p class="flex gap-2 items-center">
-                        <Icon icon="lucide:layers" />
-                        {{ jobPost.category }}
-                    </p>
-                    <p class="flex gap-2 items-center">
-                        <Icon icon="carbon:category" />{{ jobPost.service }}
-                    </p>
-                    <p class="flex gap-2 items-center">
-                        <Icon icon="lucide:map-pin" /> {{ jobPost.location }}
-                    </p>
-                    <p class="flex gap-2 items-center">
-                        <Icon icon="lucide:building-2" />
-                        {{ capitalize(jobPost.property) }}
-                    </p>
-                    <p class="flex gap-2 items-center">
-                        <Icon icon="lucide:timer" />
-                        {{
-                            capitalize(
-                                jobPost.urgency === "specificDate"
-                                    ? formattedDate
-                                    : jobPost.urgency
-                            )
-                        }}
-                    </p>
+                    <!-- Job Details -->
+                    <div class="space-y-2 text-gray-700">
+                        <p>
+                            <strong class="text-gray-900">Title:</strong>
+                            {{ jobPost.title }}
+                        </p>
+                        <p>
+                            <strong class="text-gray-900">Description:</strong>
+                            {{ jobPost.desc }}
+                        </p>
+                    </div>
+
+                    <!-- Tags Section -->
+                    <div class="flex flex-wrap gap-2">
+                        <p
+                            class="flex items-center gap-2 text-indigo-800 bg-indigo-100 px-2 rounded-full py-0.5"
+                        >
+                            <Icon icon="lucide:layers" />
+                            {{ jobPost.category.name }}
+                        </p>
+                        <p
+                            class="flex items-center gap-2 text-teal-800 bg-teal-100 px-2 rounded-full py-0.5"
+                        >
+                            <Icon icon="carbon:category" />
+                            {{ jobPost.service.name }}
+                        </p>
+                        <p
+                            class="flex items-center gap-2 text-red-800 bg-red-100 px-2 rounded-full py-0.5"
+                        >
+                            <Icon icon="lucide:map-pin" />
+                            {{ jobPost.location.location }}
+                        </p>
+                        <p
+                            class="flex items-center gap-2 text-purple-800 bg-purple-100 px-2 rounded-full py-0.5"
+                        >
+                            <Icon icon="lucide:building-2" />
+                            {{ capitalize(jobPost.property) }}
+                        </p>
+                        <p
+                            class="flex items-center gap-2 text-orange-800 bg-orange-100 px-2 rounded-full py-0.5"
+                        >
+                            <Icon icon="lucide:timer" />
+                            {{
+                                capitalize(
+                                    jobPost.urgency === "specificDate"
+                                        ? formattedDate
+                                        : jobPost.urgency
+                                )
+                            }}
+                        </p>
+                    </div>
                 </div>
             </div>
 
@@ -282,6 +337,7 @@ const submitJobPost = () => {
                     icon="fa-solid fa-arrow-right"
                     iconPos="right"
                     @click="jobPostStep++"
+                    :disabled="!canProceed"
                 />
             </div>
         </div>

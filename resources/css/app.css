@@ -28,4 +28,6 @@
 
 html {
     font-size: 0.875rem;
+    scrollbar-width: thin;
+    scrollbar-color: #b7b7b9 #f0f0f0;
 }

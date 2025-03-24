@@ -1,5 +1,5 @@
 <script setup>
-import { Head } from "@inertiajs/vue3";
+import { Head, usePage } from "@inertiajs/vue3";
 import Layout from "../Layouts/Default.vue";
 
 defineOptions({ layout: Layout });

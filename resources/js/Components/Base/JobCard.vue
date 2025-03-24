@@ -57,7 +57,7 @@ import { jobs } from "../../data";
                             'bg-purple-100 text-purple-800',
                         ],
                         [
-                            'heroicons-outline:calendar',
+                            'lucide:building-2',
                             job.job_type,
                             'bg-red-100 text-red-800',
                         ],

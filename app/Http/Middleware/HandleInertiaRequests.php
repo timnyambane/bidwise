@@ -45,6 +45,7 @@ class HandleInertiaRequests extends Middleware
                     'last_name' => $user->last_name,
                     'email' => $user->email,
                     'role' => $user->role,
+                    'photo' => $this->getUserPhoto($user)
                 ] : null,
             ],
             'flash' => [
@@ -53,5 +54,22 @@ class HandleInertiaRequests extends Middleware
                 'warning' => session('warning'),
             ],
         ]);
+    }
+
+    private function getUserPhoto($user)
+    {
+        if ($user->role === 'customer' && $user->customer) {
+            return $user->customer->photo;
+        }
+
+        if ($user->role === 'business') {
+            return $user->business->photo;
+        }
+
+        if ($user->role === 'admin') {
+            return $user->admin->photo;
+        }
+
+        return null;
     }
 }

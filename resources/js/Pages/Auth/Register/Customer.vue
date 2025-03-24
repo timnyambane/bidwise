@@ -28,8 +28,8 @@ const handleSubmit = () => {
         </div>
 
         <!-- Right Form Section -->
-        <div class="flex-1 flex items-center justify-center py-6">
-            <form class="flex flex-col w-full max-w-lg gap-6">
+        <div class="flex-2 flex items-center justify-center py-6">
+            <form class="flex flex-col w-xl gap-6">
                 <h1 class="font-bold text-3xl text-center">
                     Register as Customer
                 </h1>
@@ -94,7 +94,7 @@ const handleSubmit = () => {
                 </div>
 
                 <div class="flex flex-col md:flex-row gap-4">
-                    <div class="flex flex-col gap-1">
+                    <div class="flex flex-col gap-1 flex-1">
                         <IconField class="w-full">
                             <InputIcon class="fa-solid fa-lock" />
                             <Password
@@ -114,7 +114,7 @@ const handleSubmit = () => {
                             {{ registerForm.errors.password }}
                         </p>
                     </div>
-                    <div class="flex flex-col gap-1">
+                    <div class="flex flex-col gap-1 flex-1">
                         <IconField class="w-full">
                             <InputIcon class="fa-solid fa-lock" />
                             <Password
@@ -140,6 +140,14 @@ const handleSubmit = () => {
                     class="mt-4"
                     @click="handleSubmit"
                     :loading="registerForm.processing"
+                />
+
+                <Button
+                    label="Register as a Business"
+                    as="a"
+                    variant="link"
+                    class="lg:mt-10 w-fit mx-auto"
+                    :href="route('register.business.create')"
                 />
             </form>
         </div>

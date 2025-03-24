@@ -67,7 +67,7 @@ const submitJobPost = () => {
         header="Post a Job"
         @update:visible="emitUpdate(false)"
     >
-        <div class="flex flex-col p-2 gap-4 w-sm lg:w-md">
+        <div class="flex flex-col p-2 gap-4 w-sm lg:w-xl">
             <div>
                 <!-- Step 1 -->
                 <div v-if="jobPostStep === 1" class="flex flex-col gap-4">
@@ -75,6 +75,7 @@ const submitJobPost = () => {
                         v-model="jobPost.category"
                         placeholder="Select the category"
                         fluid
+                        editable
                     >
                         <template #dropdownicon>
                             <Icon icon="lucide:layers" />
@@ -84,6 +85,7 @@ const submitJobPost = () => {
                         v-model="jobPost.service"
                         placeholder="Select the service"
                         fluid
+                        editable
                     >
                         <template #dropdownicon>
                             <Icon icon="carbon:category" />
@@ -93,6 +95,7 @@ const submitJobPost = () => {
                         v-model="jobPost.location"
                         placeholder="Select your location"
                         fluid
+                        editable
                     >
                         <template #dropdownicon>
                             <Icon icon="lucide:map-pin" />

@@ -78,7 +78,7 @@ const applyFilters = () => {
         <!-- Header -->
         <header class="fixed top-0 w-full bg-white shadow-md z-50">
             <nav
-                class="container mx-auto flex items-center justify-between py-2 px-4 lg:px-10"
+                class="container relative mx-auto flex items-center justify-between py-2 px-4 lg:px-10"
             >
                 <Link :href="route('home')">
                     <img src="@/assets/bidwise-full.svg" alt="" class="h-10" />
@@ -106,7 +106,7 @@ const applyFilters = () => {
                     @click="togglePopover"
                 />
                 <Popover ref="op">
-                    <div
+                    <!-- <div
                         class="p-1 text-center border-b border-gray-600 mb-1 gap-1 flex flex-col items-start text-gray-600"
                     >
                         <p class="flex items-center gap-2">
@@ -115,14 +115,29 @@ const applyFilters = () => {
                         <p class="flex items-center gap-2">
                             <i class="fa-solid fa-user" /> {{ user.role }}
                         </p>
+                    </div> -->
+                    <div class="flex p-1">
+                        <div class="flex items-center gap-4">
+                            <img
+                                class="size-6 rounded-full object-center object-cover"
+                            />
+                            <div class="flex flex-col">
+                                <p class="font-medium">
+                                    {{ user.first_name + " " + user.last_name }}
+                                </p>
+                                <p class="text-sm text-gray-500">
+                                    {{ user.email }}
+                                </p>
+                            </div>
+                        </div>
                     </div>
+
                     <Button
                         label="Logout"
                         size="small"
                         variant="link"
                         icon="fa-solid fa-right-from-bracket"
                         @click="logout"
-                        severity="danger"
                     />
                 </Popover>
             </nav>
@@ -233,6 +248,7 @@ const applyFilters = () => {
                     @click="applyFilters"
                     size="small"
                     icon="fa-solid fa-filter"
+                    title="Apply Filters"
                 />
             </aside>
         </main>

@@ -19,7 +19,11 @@ defineOptions({ layout: Layout });
                 neighborhood
             </h2>
             <div class="flex gap-4">
-                <Button label="Join Now" />
+                <Button
+                    label="Join Now"
+                    as="a"
+                    :href="route('register.business.create')"
+                />
                 <Button
                     label="Learn More"
                     variant="outlined"
@@ -29,8 +33,8 @@ defineOptions({ layout: Layout });
             </div>
         </div>
 
-        <div class="flex-1">
+        <!-- <div class="flex-1">
             <img src="@/Assets/landing-img.svg" alt="Landing page" />
-        </div>
+        </div> -->
     </div>
 </template>

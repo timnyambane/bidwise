@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Business;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class BusinessController extends Controller
 {
@@ -20,7 +21,7 @@ class BusinessController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Auth/Register/Business');
     }
 
     /**

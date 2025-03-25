@@ -4,6 +4,7 @@ use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\JobPostController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
@@ -24,4 +25,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
     Route::get('/settings', [SettingsController::class, 'create'])->name('settings.create');
+    Route::get('/job-post', [JobPostController::class, 'index'])->name('job-post.index');
+    Route::post('/job-post', [JobPostController::class, 'store'])->name('job-post.store');
 });

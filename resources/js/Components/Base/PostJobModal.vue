@@ -27,7 +27,7 @@ const jobPost = useForm({
     service: null,
     urgency: null,
     property: null,
-    type: null,
+    standard: null,
     date: null,
 });
 
@@ -79,7 +79,20 @@ const canProceed = computed(() => {
 });
 
 const submitJobPost = () => {
-    console.log(jobPost);
+    if (jobPost.date) {
+        const dateObj = new Date(jobPost.date);
+        jobPost.date = dateObj.toISOString().slice(0, 19).replace("T", " ");
+    }
+    jobPost.post(route("job-post.store"), {
+        onSuccess: () => {
+            jobPostStep.value = 1;
+            jobPost.reset();
+            emitUpdate(false);
+        },
+        onError: (errors) => {
+            console.log("Failed to submit job post", errors);
+        },
+    });
 };
 </script>
 
@@ -208,7 +221,7 @@ const submitJobPost = () => {
                     </div>
                     <div class="flex gap-2">
                         <Checkbox
-                            v-model="jobPost.type"
+                            v-model="jobPost.standard"
                             inputId="jobType"
                             name="premium"
                             binary
@@ -269,31 +282,31 @@ const submitJobPost = () => {
                     <!-- Tags Section -->
                     <div class="flex flex-wrap gap-2">
                         <p
-                            class="flex items-center gap-2 text-indigo-800 bg-indigo-100 px-2 rounded-full py-0.5"
+                            class="flex items-center gap-2 text-yellow-800 bg-yellow-100 px-2 rounded-full py-0.5"
                         >
                             <Icon icon="lucide:layers" />
                             {{ jobPost.category.name }}
                         </p>
                         <p
-                            class="flex items-center gap-2 text-teal-800 bg-teal-100 px-2 rounded-full py-0.5"
+                            class="flex items-center gap-2 text-blue-800 bg-blue-100 px-2 rounded-full py-0.5"
                         >
                             <Icon icon="carbon:category" />
                             {{ jobPost.service.name }}
                         </p>
                         <p
-                            class="flex items-center gap-2 text-red-800 bg-red-100 px-2 rounded-full py-0.5"
+                            class="flex items-center gap-2 text-green-800 bg-green-100 px-2 rounded-full py-0.5"
                         >
                             <Icon icon="lucide:map-pin" />
                             {{ jobPost.location.location }}
                         </p>
                         <p
-                            class="flex items-center gap-2 text-purple-800 bg-purple-100 px-2 rounded-full py-0.5"
+                            class="flex items-center gap-2 text-red-800 bg-red-100 px-2 rounded-full py-0.5"
                         >
                             <Icon icon="lucide:building-2" />
                             {{ capitalize(jobPost.property) }}
                         </p>
                         <p
-                            class="flex items-center gap-2 text-orange-800 bg-orange-100 px-2 rounded-full py-0.5"
+                            class="flex items-center gap-2 text-purple-800 bg-purple-100 px-2 rounded-full py-0.5"
                         >
                             <Icon icon="lucide:timer" />
                             {{
@@ -338,6 +351,7 @@ const submitJobPost = () => {
                     iconPos="right"
                     @click="jobPostStep++"
                     :disabled="!canProceed"
+                    :loading="jobPost.processing"
                 />
             </div>
         </div>

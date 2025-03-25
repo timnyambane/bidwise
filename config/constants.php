@@ -2,6 +2,8 @@
 
 return [
     'roles' => ['admin', 'customer', 'business'],
+    'job_types' => ['premium', 'standard'],
+    'urgencies' => ['flexible', 'specificDate', 'immediately'],
 
     'country_code' => '44',
 

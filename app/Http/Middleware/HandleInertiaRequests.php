@@ -40,9 +40,6 @@ class HandleInertiaRequests extends Middleware
     {
         $user = Auth::user();
         $locations = Location::all();
-        $categories = Category::with('services:id,name,category_id')
-            ->select('id', 'name')
-            ->get();
 
         return array_merge(parent::share($request), [
             'auth' => [

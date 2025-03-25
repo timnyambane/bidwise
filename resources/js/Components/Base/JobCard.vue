@@ -1,5 +1,8 @@
 <script setup>
-import { jobs } from "../../data";
+import { Icon } from "@iconify/vue";
+import { usePage } from "@inertiajs/vue3";
+
+const jobs = usePage().props.jobPosts;
 </script>
 
 <template>
@@ -11,8 +14,7 @@ import { jobs } from "../../data";
         >
             <header class="flex items-center gap-2">
                 <img
-                    :src="job.avatar"
-                    :alt="`${job.postedBy} avatar`"
+                    alt="Customer avatar"
                     class="w-14 h-14 rounded-full border border-gray-300 object-cover"
                     loading="lazy"
                 />
@@ -21,21 +23,16 @@ import { jobs } from "../../data";
                         class="text-lg font-semibold text-gray-900 flex items-center gap-1"
                     >
                         {{ job.title }}
-                        <Icon
-                            v-if="job.job_var === 'premium'"
-                            icon="material-symbols-light:verified-rounded"
-                            class="text-yellow-500"
-                            aria-label="Verified"
-                        />
                     </h2>
                     <p class="text-sm text-gray-600">
-                        {{ job.name }} &middot; {{ job.postedOn }}
+                        Customer ID: {{ job.customer_id }} &middot;
+                        {{ new Date(job.created_at).toLocaleDateString() }}
                     </p>
                 </div>
             </header>
 
             <p class="text-gray-700 text-sm leading-relaxed mt-2">
-                {{ job.description }}
+                {{ job.desc }}
             </p>
 
             <ul class="flex flex-wrap gap-2 text-sm mt-3">
@@ -43,12 +40,17 @@ import { jobs } from "../../data";
                     v-for="(icon, key) in [
                         [
                             'lucide:layers',
-                            job.service,
+                            job.category.name,
+                            'bg-orange-100 text-orange-800',
+                        ],
+                        [
+                            'lucide:layers',
+                            job.service.name,
                             'bg-blue-100 text-blue-800',
                         ],
                         [
                             'heroicons-outline:map-pin',
-                            job.location,
+                            job.location.location,
                             'bg-green-100 text-green-800',
                         ],
                         [
@@ -58,7 +60,7 @@ import { jobs } from "../../data";
                         ],
                         [
                             'lucide:building-2',
-                            job.job_type,
+                            job.property,
                             'bg-red-100 text-red-800',
                         ],
                     ]"

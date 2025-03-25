@@ -30,7 +30,7 @@ class RegisterCustomerRequest extends FormRequest
             'email' => 'required|email|unique:users,email',
             'phone' => [
                 'required',
-                'unique:users,phone',
+                'unique:customers,phone',
                 'regex:/^07\d{9}$/'
             ],
 

@@ -55,7 +55,7 @@ class CustomerController extends Controller
             Log::error('Registration failed', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
-                'data' => $data // Log request data for debugging
+                'data' => $data
             ]);
 
             return redirect()->back()->withInput()->withErrors(['error' => 'An error occurred during registration.']);

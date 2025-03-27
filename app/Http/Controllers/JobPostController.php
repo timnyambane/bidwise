@@ -44,6 +44,7 @@ class JobPostController extends Controller
                         'urgency' => $job->urgency,
                         'property' => $job->property,
                         'standard' => $job->standard,
+                        'status' => $job->active,
                         'date' => $job->date,
                         'created_at' => $job->created_at,
                         'updated_at' => $job->updated_at,
@@ -82,7 +83,9 @@ class JobPostController extends Controller
 
         $validated['customer_id'] = Auth::user()->customer->id;
 
-        $jobPosting = JobPost::create($validated);
+        $jobPosting = JobPost::create(array_merge($validated, [
+            'status' => config('constants.job_status.active')
+        ]));
 
         return back()->with([
             'success' => 'Job post created successfully!',

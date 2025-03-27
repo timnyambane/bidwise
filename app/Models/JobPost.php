@@ -17,6 +17,7 @@ class JobPost extends Model
         'property',
         'standard',
         'date',
+        'status'
     ];
 
     protected $casts = [

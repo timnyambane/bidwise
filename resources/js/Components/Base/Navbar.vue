@@ -5,22 +5,43 @@ import { Link, usePage } from "@inertiajs/vue3";
 const isDrawerOpen = ref(false);
 
 const navLinks = [
-    { name: "Home", route: "home" },
-    { name: "Services", route: "home" },
-    { name: "About", route: "register.customer" },
-    { name: "Contact", route: "register.business" },
+    { name: "Create Account", route: "register.customer.create" },
+    { name: "Join as Business", route: "register.business.create" },
 ];
 </script>
 
 <template>
     <nav class="shadow">
         <div class="container flex items-center justify-between mx-auto p-2">
-            <Link :href="route('home')">
+            <Link :href="route('home')" class="flex-1">
                 <img src="@/assets/bidwise-full.svg" alt="Logo" class="h-10" />
             </Link>
 
+            <div
+                class="lg:flex items-center gap-4 flex-1 hidden justify-center"
+            >
+                <Link
+                    :href="route('register.customer.create')"
+                    :class="{
+                        'text-primary-600 hover:text-primary-500 transition':
+                            $page.url.startsWith('/register/customer'),
+                    }"
+                >
+                    Create Account
+                </Link>
+                <Link
+                    :href="route('register.business.create')"
+                    :class="{
+                        'text-primary-600 hover:text-primary-500 transition':
+                            $page.url.startsWith('/register/business'),
+                    }"
+                >
+                    Join as Business
+                </Link>
+            </div>
+
             <!-- Desktop Menu -->
-            <div class="hidden lg:flex items-center gap-6">
+            <div class="hidden lg:flex items-center gap-6 flex-1 justify-end">
                 <Button
                     v-if="usePage().props.auth.user"
                     label="Contact Us"
@@ -60,8 +81,9 @@ const navLinks = [
             <div class="flex flex-col gap-4 p-2">
                 <Link
                     v-for="link in navLinks"
+                    :href="route(link.route)"
                     :key="link.name"
-                    class="text-gray-700 text-lg hover:text-blue-600 transition"
+                    class="text-gray-700 text-lg hover:text-primary-600 transition"
                 >
                     {{ link.name }}
                 </Link>

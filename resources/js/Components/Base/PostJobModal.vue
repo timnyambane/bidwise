@@ -17,6 +17,8 @@ defineProps({
 const emit = defineEmits(["update:modelValue"]);
 const emitUpdate = (value) => {
     emit("update:modelValue", value);
+    jobPost.reset();
+    jobPostStep.value = 1;
 };
 
 const jobPost = useForm({
@@ -30,6 +32,9 @@ const jobPost = useForm({
     standard: null,
     date: null,
 });
+
+const isSuccess = ref(null);
+const statusMessage = ref(null);
 
 const services = computed(() => {
     return (
@@ -83,14 +88,18 @@ const submitJobPost = () => {
         const dateObj = new Date(jobPost.date);
         jobPost.date = dateObj.toISOString().slice(0, 19).replace("T", " ");
     }
+
     jobPost.post(route("job-post.store"), {
         onSuccess: () => {
-            jobPostStep.value = 1;
+            isSuccess.value = true;
+            statusMessage.value = "Job posted successfully!";
+            jobPostStep.value = 4;
             jobPost.reset();
-            emitUpdate(false);
         },
-        onError: (errors) => {
-            console.log("Failed to submit job post", errors);
+        onError: () => {
+            isSuccess.value = false;
+            statusMessage.value = "Failed to post job. Please try again.";
+            jobPostStep.value = 4;
         },
     });
 };
@@ -318,6 +327,48 @@ const submitJobPost = () => {
                             }}
                         </p>
                     </div>
+                </div>
+
+                <div
+                    v-if="jobPostStep === 4"
+                    class="flex flex-col items-center text-center"
+                >
+                    <template v-if="isSuccess">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="w-24 h-24 text-green-500"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm5.707 7.293a1 1 0 00-1.414-1.414L10 14.172l-2.293-2.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l7-7z"
+                                clip-rule="evenodd"
+                            />
+                        </svg>
+                    </template>
+
+                    <template v-else>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="w-24 h-24 text-red-500"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 5a1 1 0 012 0v5a1 1 0 01-2 0V7zm1 10a1.5 1.5 0 110-3 1.5 1.5 0 010 3z"
+                                clip-rule="evenodd"
+                            />
+                        </svg>
+                    </template>
+
+                    <h3 class="text-xl font-bold mt-4">{{ statusMessage }}</h3>
+                    <Button
+                        label="Close"
+                        @click="emitUpdate(false)"
+                        class="mt-4"
+                    />
                 </div>
             </div>
 

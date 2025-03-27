@@ -22,6 +22,7 @@ return new class extends Migration {
             $table->string('property');
             $table->boolean('standard')->default(true);
             $table->date('date')->nullable();
+            $table->enum('status', config('constants.job_status'))->default('active');
             $table->timestamps();
         });
     }

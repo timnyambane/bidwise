@@ -48,7 +48,7 @@ onMounted(() => {
                         {{ job.customer.last_name }} &middot;
                         {{ new Date(job.created_at).toLocaleDateString() }}
                         <Icon
-                            v-if="!job.standard"
+                            v-if="job.standard"
                             icon="material-symbols-light:verified-rounded"
                             class="text-yellow-500 text-xl"
                             aria-label="Verified"
@@ -64,13 +64,13 @@ onMounted(() => {
             <ul class="flex flex-wrap gap-2 text-sm mt-3">
                 <li
                     v-for="(icon, key) in [
+                        // [
+                        //     'lucide:layers',
+                        //     job.category,
+                        //     'bg-orange-100 text-orange-800',
+                        // ],
                         [
-                            'lucide:layers',
-                            job.category,
-                            'bg-orange-100 text-orange-800',
-                        ],
-                        [
-                            'lucide:layers',
+                            'proicons:branch',
                             job.service,
                             'bg-blue-100 text-blue-800',
                         ],

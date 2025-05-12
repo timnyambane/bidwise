@@ -17,7 +17,6 @@ Route::middleware('guest')->group(function () {
     Route::post('/register/customer', [CustomerController::class, 'store'])->name('register.customer.store');
     Route::get('/register/business', [BusinessController::class, 'create'])->name('register.business.create');
     Route::post('/register/business', [BusinessController::class, 'store'])->name('register.business.store');
-    Route::post('/validate-user', [BusinessController::class, 'validateUser'])->name('register.business.validate-user');
     Route::post('/validate-business', [BusinessController::class, 'validateBusiness'])->name('register.business.validate-business');
 });
 

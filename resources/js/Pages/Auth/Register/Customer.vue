@@ -77,7 +77,7 @@ const handleSubmit = () => {
                     <IconField>
                         <InputIcon class="fa-solid fa-phone" />
                         <InputText
-                            id="tel"
+                            id="phone"
                             v-model="registerForm.phone"
                             placeholder="Phone Number"
                             type="tel"

@@ -1,13 +1,6 @@
 <script setup>
 import { useForm, usePage } from "@inertiajs/vue3";
-import {
-    defineProps,
-    defineEmits,
-    ref,
-    computed,
-    watch,
-    capitalize,
-} from "vue";
+import { ref, computed, watch, capitalize } from "vue";
 const { locations, categories } = usePage().props;
 
 defineProps({

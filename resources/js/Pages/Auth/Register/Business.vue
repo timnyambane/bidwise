@@ -19,13 +19,19 @@ const registerForm = useForm({
     services: [],
 });
 
-const regStep = ref(2);
+const regStep = ref(1);
 
 const handleNextStep = () => {
     if (regStep.value === 1) {
-        regStep.value = 2;
+        registerForm.post(route("register.business.validate-business"), {
+            preserveScroll: true,
+            onSuccess: () => {
+                regStep.value = 2;
+            },
+        });
     } else {
-        console.log(registerForm);
+        registerForm.post(route("register.business.store"));
+        // console.log(registerForm);
     }
 };
 
@@ -33,7 +39,6 @@ const handleBackStep = () => {
     if (regStep.value > 1) regStep.value--;
 };
 
-// Computed property to filter services based on the selected category
 const services = computed(() => {
     return (
         categories.find((cat) => cat.id === registerForm.category?.id)
@@ -41,7 +46,6 @@ const services = computed(() => {
     );
 });
 
-// Watch for changes in category selection and reset selected services
 watch(
     () => registerForm.category,
     () => {
@@ -210,6 +214,13 @@ watch(
                                 fluid
                             />
                         </IconField>
+
+                        <p
+                            v-if="registerForm.errors.name"
+                            class="text-red-500 text-sm"
+                        >
+                            {{ registerForm.errors.name }}
+                        </p>
                     </div>
                     <div class="flex flex-col gap-1">
                         <Select
@@ -219,6 +230,12 @@ watch(
                             optionLabel="location"
                             fluid
                         />
+                        <p
+                            v-if="registerForm.errors.location"
+                            class="text-red-500 text-sm"
+                        >
+                            {{ registerForm.errors.location }}
+                        </p>
                     </div>
                     <div class="flex flex-col gap-1">
                         <Select
@@ -227,7 +244,14 @@ watch(
                             :options="categories"
                             optionLabel="name"
                             fluid
+                            filter
                         />
+                        <p
+                            v-if="registerForm.errors.category"
+                            class="text-red-500 text-sm"
+                        >
+                            {{ registerForm.errors.category }}
+                        </p>
                     </div>
                     <div class="flex flex-col gap-1">
                         <MultiSelect
@@ -238,6 +262,12 @@ watch(
                             :maxSelectedLabels="3"
                             fluid
                         />
+                        <p
+                            v-if="registerForm.errors.services"
+                            class="text-red-500 text-sm"
+                        >
+                            {{ registerForm.errors.services }}
+                        </p>
                     </div>
                 </div>
 

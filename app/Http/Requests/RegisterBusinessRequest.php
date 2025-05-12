@@ -1,13 +1,11 @@
 <?php
 
 namespace App\Http\Requests;
-use Illuminate\Support\Facades\DB;
-
-
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\DB;
 
-class RegisterCustomerRequest extends FormRequest
+class RegisterBusinessRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -33,14 +31,18 @@ class RegisterCustomerRequest extends FormRequest
             'email' => 'required|email|unique:users,email',
             'phone' => [
                 'required',
-                function ($attribute, $value, $fail) {
-                    $formattedPhone = formatPhoneNumber($value);
+                'phone' => [
+                    'required',
+                    function ($attribute, $value, $fail) {
+                        $formattedPhone = formatPhoneNumber($value);
 
-                    if (DB::table('customers')->where('phone', $formattedPhone)->exists()) {
-                        $fail('The phone number is already registered.');
-                    }
-                },
-                'regex:/^07\d{9}$/',
+                        if (DB::table('businesses')->where('phone', $formattedPhone)->exists()) {
+                            $fail('The phone number is already registered.');
+                        }
+                    },
+                    'regex:/^07\d{9}$/',
+                ],
+                'regex:/^07\d{9}$/'
             ],
 
             'password' => [
@@ -53,9 +55,9 @@ class RegisterCustomerRequest extends FormRequest
                 'regex:/[0-9]/',
                 'regex:/[@$!%*?&#]/'
             ],
-            'confirmPassword' => [
-                'required',
-            ],
+            // 'confirmPassword' => [
+            //     'required',
+            // ],
         ];
     }
 

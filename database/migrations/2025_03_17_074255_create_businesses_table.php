@@ -12,12 +12,12 @@ return new class extends Migration {
     {
         Schema::create('businesses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('user_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('location_id')->constrained()->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('category_id')->constrained()->onUpdate('cascade')->onDelete('restrict');
             $table->string('name')->unique();
-            $table->string('location');
             $table->string('phone')->unique();
             $table->string('photo')->nullable();
-            $table->string('website')->nullable()->unique();
             $table->timestamps();
         });
     }
